@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cofi Finance App</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f6f9;
+      text-align: center;
+    }
+    header {
+      background: #0d47a1;
+      color: white;
+      padding: 15px;
+    }
+    button {
+      padding: 12px;
+      margin: 10px;
+      width: 90%;
+      border: none;
+      background: #1976d2;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+    }
+    section {
+      padding: 15px;
+    }
+    input {
+      padding: 10px;
+      margin: 5px;
+      width: 80%;
+    }
+    textarea {
+      width: 90%;
+      height: 100px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>🎓 Cofi Finance App</h2>
+  <p>Gestão Financeira e Bancária</p>
+</header>
+
+<section>
+  <h3>📚 Cadeiras</h3>
+  <button onclick="showSection('materias')">Ver Matérias</button>
+  <button onclick="showSection('resumos')">Guardar Resumo</button>
+  <button onclick="showSection('calculadora')">Calculadora Financeira</button>
+</section>
+
+<section id="materias" style="display:none;">
+  <h3>Minhas Cadeiras</h3>
+  <ul>
+    <li>Contabilidade de Gestão</li>
+    <li>Gestão Financeira II</li>
+    <li>Investigação Operacional</li>
+    <li>ARCI</li>
+    <li>Fiscalidade</li>
+    <li>Finanças Públicas</li>
+    <li>Gestão Comercial e Marketing</li>
+  </ul>
+</section>
+
+<section id="resumos" style="display:none;">
+  <h3>📝 Guardar Resumo</h3>
+  <textarea id="resumoTexto" placeholder="Escreva seu resumo aqui..."></textarea>
+  <button onclick="salvarResumo()">Salvar</button>
+  <p id="mensagem"></p>
+</section>
+
+<section id="calculadora" style="display:none;">
+  <h3>🧮 Juros Compostos</h3>
+  <input type="number" id="capital" placeholder="Capital Inicial">
+  <input type="number" id="taxa" placeholder="Taxa (%)">
+  <input type="number" id="tempo" placeholder="Tempo">
+  <button onclick="calcular()">Calcular</button>
+  <p id="resultado"></p>
+</section>
+
+<script>
+function showSection(id) {
+  document.getElementById("materias").style.display = "none";
+  document.getElementById("resumos").style.display = "none";
+  document.getElementById("calculadora").style.display = "none";
+  document.getElementById(id).style.display = "block";
+}
+
+function salvarResumo() {
+  let texto = document.getElementById("resumoTexto").value;
+  localStorage.setItem("resumo", texto);
+  document.getElementById("mensagem").innerText = "Resumo salvo com sucesso!";
+}
+
+function calcular() {
+  let C = parseFloat(document.getElementById("capital").value);
+  let i = parseFloat(document.getElementById("taxa").value) / 100;
+  let t = parseFloat(document.getElementById("tempo").value);
+
+  let M = C * Math.pow((1 + i), t);
+  document.getElementById("resultado").innerText = "Montante: " + M.toFixed(2);
+}
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+
+</body>
+</html>
