@@ -11,6 +11,11 @@
       margin: 0;
       background: #f4f6f9;
       text-align: center;
+  <section id="pdfs" style="display:none;">
+  <h3>📄 Meus PDFs</h3>
+  <input type="file" id="pdfUpload" accept="application/pdf" multiple>
+  <ul id="pdfList"></ul>
+</section>
     }
     header {
       background: #0d47a1;
@@ -26,6 +31,7 @@
       color: white;
       font-size: 16px;
       border-radius: 8px;
+   <button onclick="showSection('pdfs')">Ver PDFs</button>
     }
     section {
       padding: 15px;
@@ -111,6 +117,38 @@ function calcular() {
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
 }
+// Salvar PDFs na memória local (nome + URL)
+let pdfs = JSON.parse(localStorage.getItem("pdfs") || "[]");
+
+function atualizarListaPDFs() {
+  const lista = document.getElementById("pdfList");
+  lista.innerHTML = "";
+  pdfs.forEach((pdf, index) => {
+    const li = document.createElement("li");
+    const link = document.createElement("a");
+    link.href = pdf.url;
+    link.innerText = pdf.name;
+    link.target = "_blank";
+    li.appendChild(link);
+    lista.appendChild(li);
+  });
+}
+
+document.getElementById("pdfUpload").addEventListener("change", function(e) {
+  const files = e.target.files;
+  for (let file of files) {
+    const reader = new FileReader();
+    reader.onload = function() {
+      pdfs.push({ name: file.name, url: reader.result });
+      localStorage.setItem("pdfs", JSON.stringify(pdfs));
+      atualizarListaPDFs();
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Atualizar lista ao carregar a app
+atualizarListaPDFs();
 </script>
 
 </body>
